@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.0.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <context:property-placeholder location="classpath:*.properties" file-encoding="UTF-8" />
+
+    <context:component-scan base-package="com.miri.blephone.mediainjector">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="initialSize" value="10" />
+        <property name="minIdle" value="10" />
+        <property name="maxIdle" value="50" />
+        <property name="timeBetweenEvictionRunsMillis" value="3600000" />
+        <property name="validationQuery" value="SELECT 1" />
+        <property name="testWhileIdle" value="true" />
+        <property name="defaultAutoCommit" value="true" />
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="com.miri.blephone.mediainjector.db.domain" />
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.miri.blephone.mediainjector.db.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManager" />
+    
+    <task:annotation-driven executor="injectExecutor" scheduler="injectScheduler"/>
+    <task:executor id="injectExecutor" pool-size="64"/>
+    <task:scheduler id="injectScheduler" pool-size="32"/>
+    
+    <bean id="springFactoryUtils" class="com.miri.blephone.mediainjector.uitls.SpringFactoryUtils" factory-method="getInstance" />
+    
+    
+    <rabbit:connection-factory id="connectionFactory" host="${mgtv.mq.host}" username="${mgtv.mq.username}" 
+        password="${mgtv.mq.password}" port="${mgtv.mq.port}" virtual-host="${mgtv.mq.vhost}"/>
+        
+    <rabbit:admin connection-factory="connectionFactory" />
+    
+    <bean id="MQConsumerMessageListener" class="com.miri.blephone.mediainjector.mq.MQConsumerMessageListener" />
+        
+    <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual" concurrency="2" prefetch="2" >
+        <rabbit:listener queue-names="${mgtv.queue.media.name}" ref="MQConsumerMessageListener"/>
+        <rabbit:listener queue-names="${mgtv.queue.correlation.name}" ref="MQConsumerMessageListener"/>
+        <rabbit:listener queue-names="${mgtv.queue.column.name}" ref="MQConsumerMessageListener"/>
+        <rabbit:listener queue-names="${mgtv.queue.star.name}" ref="MQConsumerMessageListener"/>
+    </rabbit:listener-container>
+</beans>

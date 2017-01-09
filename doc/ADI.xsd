@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ADI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Objects" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Object" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                  <xs:attribute name="ElementType" type="xs:string" use="required"/>
+                  <xs:attribute name="ID" type="xs:string" use="required"/>
+                  <xs:attribute name="Action" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Mappings" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Mapping" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                  <xs:attribute name="ID" type="xs:string" use="optional"/>
+                  <xs:attribute name="ParentType" type="xs:string" use="required"/>
+                  <xs:attribute name="ParentID" type="xs:string" use="required"/>
+                  <xs:attribute name="ElementType" type="xs:string" use="required"/>
+                  <xs:attribute name="ElementID" type="xs:string" use="required"/>
+                  <xs:attribute name="Action" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Reply" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Result" type="xs:string"/>
+              <xs:element name="Description" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="SPCode" type="xs:string" use="optional"/>
+      <xs:attribute name="SubsidiaryID" type="xs:string" use="optional"/>
+      <xs:attribute name="StaffID" type="xs:string" use="optional"/>
+      <xs:attribute name="CheckFlag" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="PropertyType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Name" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

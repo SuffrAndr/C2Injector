@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.WsMsgMapper">
+     <insert id="add" parameterType="WsMsg" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_WSMSG
+		    (
+				ID          ,
+				CORRELATEID ,    
+				STOREPATH   ,    
+				ERRORDESC   ,     
+				RESULTFILEURL,   
+				NOTIFYERRORDESC,
+				STATUS      ,
+				OBJECTID    ,
+				`TYPE`      ,
+				OPTYPE      ,
+				INITALTIME  ,
+				SUBOBJECTID
+		    )
+		    VALUES
+		    (
+				#{id},             
+				#{correlateId},    
+				#{storePath},      
+				#{errorDesc},      
+				#{resultFileUrl},  
+				#{notifyRrrorDesc},
+				#{status},
+				#{objectId},
+				#{type},
+				#{opType},
+				#{initalTime},
+				#{subObjectId}
+		    )
+     </insert>
+     
+     <select id="queryByCorrelateId" parameterType="string" resultType="WsMsg">
+        SELECT * FROM T_WSMSG WHERE CORRELATEID = #{correlateId}
+     </select>
+     
+     <select id="queryByStatus" resultType="WsMsg">
+        SELECT * FROM T_WSMSG 
+        WHERE STATUS    IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND RETRYNUMBER &lt; 3 
+     </select>
+     
+     <select id="queryWsMsgs" parameterType="WsMsg" resultType="WsMsg">
+        SELECT * FROM T_WSMSG
+        WHERE   OBJECTID    = #{objectId}
+        AND     TYPE        = #{type}
+        AND     OPTYPE      = #{opType}
+        AND     STOREPATH   = #{storePath}
+     </select>     
+
+     <update id="update" parameterType="WsMsg">
+        UPDATE T_WSMSG
+        <set>
+            <if test="storePath  != null">STOREPATH             =  #{storePath},</if>      
+            <if test="errorDesc  != null">ERRORDESC             =  #{errorDesc},</if>      
+            <if test="resultFileUrl   != null">RESULTFILEURL    =  #{resultFileUrl},</if>  
+            <if test="status    != null">STATUS                 =  #{status},</if>
+            <if test="updateTime  != null">UPDATETIME           =  #{updateTime},</if>   
+            <if test="notifyRrrorDesc != null">NOTIFYERRORDESC  =  #{notifyRrrorDesc},</if>
+            <if test="retryNumber != null">RETRYNUMBER          =  #{retryNumber}</if>
+        </set>
+        WHERE CORRELATEID = #{correlateId}
+     </update>     
+</mapper>

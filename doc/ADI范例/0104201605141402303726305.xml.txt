@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ADI>
+    <Objects>
+        <Object ElementType="Program" ID="02000002000000012016051499720295" Code="CP23010020160512030800" Action="REGIST">
+            <Property Name="SCode">02000002000000012016051499720295</Property>
+            <Property Name="Name">[2016-05-13]年代秀</Property>
+            <Property Name="OrderNumber"/>
+            <Property Name="OriginalName"/>
+            <Property Name="SortName"/>
+            <Property Name="SearchName"/>
+            <Property Name="ActorDisplay"/>
+            <Property Name="WriterDisplay"/>
+            <Property Name="OriginalCountry">内地</Property>
+            <Property Name="Language">国语</Property>
+            <Property Name="ReleaseYear">2016</Property>
+            <Property Name="OrgAirDate"/>
+            <Property Name="LicensingWindowStart">20160512000000</Property>
+            <Property Name="LicensingWindowEnd">20660512000000</Property>
+            <Property Name="DisplayAsNew"/>
+            <Property Name="DisplayAsLastChance"/>
+            <Property Name="Macrovision">0</Property>
+            <Property Name="Description"/>
+            <Property Name="PriceTaxIn"/>
+            <Property Name="Status">1</Property>
+            <Property Name="SourceType">1</Property>
+            <Property Name="SeriesFlag">0</Property>
+            <Property Name="Kpeople"/>
+            <Property Name="Director"/>
+            <Property Name="ScriptWriter"/>
+            <Property Name="Compere"/>
+            <Property Name="Guest"/>
+            <Property Name="Reporter"/>
+            <Property Name="OPIncharge">年代秀</Property>
+            <Property Name="VSPCode">浙江华数</Property>
+            <Property Name="CopyRight"/>
+            <Property Name="ContentProvider">浙江华数</Property>
+            <Property Name="Duration">106</Property>
+        </Object>
+        <Object ElementType="Movie" ID="02000002000000022016051499004727" Code="CP23010020160512030825" Action="REGIST">
+            <Property Name="SCode">02000002000000022016051499004727</Property>
+            <Property Name="Type">1</Property>
+            <Property Name="FileURL">ftp://online1:online1@172.25.48.35:21/online1/2016/0514/02000002000000022016051499004727/14888409_20160512001.ts</Property>
+            <Property Name="SourceDRMType"/>
+            <Property Name="DestDRMType"/>
+            <Property Name="AudioType">0</Property>
+            <Property Name="ScreenFormat">1</Property>
+            <Property Name="ClosedCaptioning">0</Property>
+            <Property Name="MediaSpec">TS-CBR-H.264-2300-576i-25-MP2-128000</Property>
+        </Object>
+    </Objects>
+    <Mappings>
+        <Mapping ID="" ParentType="Program" ParentID="02000002000000012016051499720295" ParentCode="CP23010020160512030800" ElementType="Movie" ElementID="02000002000000022016051499004727" ElementCode="CP23010020160512030825" Action="REGIST"/>
+    </Mappings>
+</ADI>

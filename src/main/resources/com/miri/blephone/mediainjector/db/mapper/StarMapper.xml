@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.StarMapper">
+     <insert id="add" parameterType="Star" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_STAR
+		    (
+				ID                ,
+				STARID            ,     
+				NAME              ,
+				ENAME             , 
+				SEX               ,
+				BIRTHDAY          ,    
+				HOMEPLACE         ,     
+				COLLEGE           ,   
+				NATION            ,  
+				CONSTELLATHION    ,       
+				BLOOD             ,
+				HEIGHT            ,
+				WEIGHT            ,  
+				INTRO             , 
+				INITIAL           ,   
+				PHOTOURL          ,    
+				IMGHASH           ,   
+				FULLSPELL         ,     
+				SIMPLESPELL       ,      
+				OCCUPATION        ,
+				UPDATETIME  
+		    )
+		    VALUES
+		    (
+				#{id},
+				#{starid},    
+				#{name},    
+				#{ename},    
+				#{sex},    
+				#{birthday},    
+				#{homeplace},    
+				#{college},    
+				#{nation},    
+				#{constellathion},
+				#{blood},
+				#{height},
+				#{weight},    
+				#{intro},    
+				#{initial},    
+				#{photourl},    
+				#{imghash},    
+				#{fullspell},    
+				#{simplespell},   
+				#{occupation},
+				#{updateTime}
+		    )
+     </insert>
+     
+     <select id="countByStarlId" resultType="int">
+        SELECT COUNT(*) FROM T_STAR WHERE STARID  = #{starid} 
+     </select>
+     
+     <update id="update" parameterType="Star">
+        UPDATE T_STAR
+        SET
+			NAME            = #{name},    
+			ENAME           = #{ename},    
+			SEX             = #{sex},    
+			BIRTHDAY        = #{birthday},    
+			HOMEPLACE       = #{homeplace},    
+			COLLEGE         = #{college},    
+			NATION          = #{nation},    
+			CONSTELLATHION  = #{constellathion},
+			BLOOD           = #{blood},
+			HEIGHT          = #{height},
+			WEIGHT          = #{weight},    
+			INTRO           = #{intro},    
+			INITIAL         = #{initial},    
+			PHOTOURL        = #{photourl},    
+			IMGHASH         = #{imghash},    
+			FULLSPELL       = #{fullspell},    
+			SIMPLESPELL     = #{simplespell},   
+			OCCUPATION      = #{occupation}
+        WHERE
+            STARID          = #{starid}  
+     </update>
+     
+     <delete id="delete">
+        DELETE FROM T_STAR WHERE STARID = #{starid}
+     </delete>    
+</mapper>

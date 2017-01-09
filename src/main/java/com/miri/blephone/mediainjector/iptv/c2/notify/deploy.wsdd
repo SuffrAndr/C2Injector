@@ -1,0 +1,41 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from CSPResponseService WSDL service -->
+
+  <service name="ctms" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="iptv"/>
+      <parameter name="wsdlServiceElement" value="CSPResponseService"/>
+      <parameter name="schemaUnqualified" value="iptv"/>
+      <parameter name="wsdlServicePort" value="ctms"/>
+      <parameter name="className" value="com.miri.blephone.mediainjector.iptv.c2.notify.CtmsSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="CSPResponse"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="resultNotify" qname="operNS:ResultNotify" xmlns:operNS="iptv" returnQName="ResultNotifyReturn" returnType="rtns:CSPResult" xmlns:rtns="iptv" soapAction="" >
+        <parameter qname="CSPID" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <parameter qname="LSPID" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <parameter qname="CorrelateID" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <parameter qname="CmdResult" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="ResultFileURL" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </operation>
+      <parameter name="allowedMethods" value="resultNotify"/>
+
+      <typeMapping
+        xmlns:ns="iptv"
+        qname="ns:CSPResult"
+        type="java:com.miri.blephone.mediainjector.iptv.c2.notify.CSPResult"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>

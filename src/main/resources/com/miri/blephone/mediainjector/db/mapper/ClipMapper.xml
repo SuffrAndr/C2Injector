@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.ClipMapper">
+     <insert id="add" parameterType="Clip" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_CLIP
+		    (
+		      ID          ,
+		      ASSETID     ,
+		      ORIASSETID  ,
+		      PARTID      ,
+		      ORIGINALID  ,
+		      PARTNAME    ,
+		      OTHERNME    ,
+		      EXTAG       ,
+		      EVENTTAG    ,
+		      KEYWORD     ,
+		      DIRECTOR    ,
+		      ADAPTOR     ,
+		      LEADER      ,
+		      KIND        ,
+		      AREA        ,
+		      LANGUAGE    ,
+		      CAPTION     ,
+		      TAGS        ,
+		      STORY       ,
+		      AWARDS      ,
+		      YEAR        ,
+		      DURATION    ,
+		      UPDATETIME  ,
+		      CREATETIME  ,
+		      RELASETIME  ,
+		      INITAL      ,
+		      SIMPLESPELL ,
+		      ISINTACT    ,
+		      SERIALNO    ,
+		      PUBLISHER   ,
+		      PERIODS     ,
+		      STATUS      ,
+		      INITALTIME  ,
+		      OBJECTID
+		    )
+		    VALUES
+		    (
+		        #{id},
+				#{assetid},
+				#{oriassetid},
+				#{partid},
+				#{originalid},
+				#{partname},
+				#{othernme},
+				#{extag},
+				#{eventtag},
+				#{keyword},
+				#{director},
+				#{adaptor},
+				#{leader},
+				#{kind},
+				#{area},
+				#{language},
+				#{caption},
+				#{tags},
+				#{story},
+				#{awards},
+				#{year},
+				#{duration},
+				#{updatetime},
+				#{createtime},
+				#{relasetime},
+				#{inital},
+				#{simplespell},
+				#{isintact},
+				#{serialno},
+				#{publisher},
+				#{periods},
+				#{status} ,
+				#{initalTime},
+				#{objectId}
+		    )
+     </insert>
+     
+     <select id="countByOriginalId" resultType="int">
+        SELECT COUNT(*) FROM T_CLIP WHERE ORIGINALID = #{originalId}
+     </select>
+     
+     <select id="queryByStatus" resultType="Clip">
+        SELECT * FROM T_CLIP WHERE STATUS = #{status}
+     </select>
+     
+     <select id="querySeriesByStatus" resultType="Clip">
+        <![CDATA[
+            SELECT B.*  
+            FROM   T_FILE A, T_CLIP B, T_CATEGORY C 
+            WHERE  A.ORIPARTID = B.ORIGINALID 
+            AND    A.DOWNLOADSTATUS =2 
+            AND    A.FILEFORMATDESC >=2  
+            AND    A.URLPREFIX !='' 
+            AND    A.STATUS IN (1,2)
+            AND    B.STATUS = #{clipStatus}
+            AND    A.ORIASSETID = C.ORIGINALID
+            AND    B.ORIASSETID = C.ORIGINALID
+            AND    C.STATUS = #{categoryStatus}
+            AND    C.SERIALCOUNT > 1
+            ORDER BY A.ORIASSETID, A.ORIPARTID
+            LIMIT  10
+        ]]>        
+     </select>
+     
+     <select id="queryMovicesByStatus" resultType="Clip">
+        <![CDATA[
+            SELECT B.*  
+            FROM   T_FILE A, T_CLIP B, T_CATEGORY C 
+            WHERE  A.ORIPARTID = B.ORIGINALID 
+            AND    A.DOWNLOADSTATUS =2 
+            AND    A.FILEFORMATDESC >=2  
+            AND    A.URLPREFIX !='' 
+            AND    A.STATUS IN (1,2)
+            AND    B.STATUS = #{clipStatus}
+            AND    A.ORIASSETID = C.ORIGINALID
+            AND    B.ORIASSETID = C.ORIGINALID
+            AND    C.STATUS = #{categoryStatus}
+            AND    C.SERIALCOUNT = 1
+            ORDER BY A.ORIASSETID, A.ORIPARTID 
+            LIMIT  10
+        ]]>        
+     </select>     
+
+     <select id="queryByOriginalId" resultType="Clip">
+        SELECT * FROM T_CLIP WHERE ORIGINALID = #{originalId}
+     </select>
+
+     <select id="queryByOriassetId" resultType="Clip">
+        SELECT * FROM T_CLIP WHERE ORIASSETID = #{oriassetid}
+     </select>
+     
+     <select id="queryByObjectId" resultType="Clip">
+        SELECT * FROM T_CLIP WHERE OBJECTID = #{objectId}
+     </select>     
+     
+     <update id="updateStatusByOriginalId">
+        UPDATE
+            T_CLIP
+        SET
+            STATUS          = #{status}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>
+     
+     <update id="updateStatusByObjectId">
+        UPDATE
+            T_CLIP
+        SET
+            STATUS          = #{status}
+        WHERE
+            OBJECTID        = #{objectId}    
+     </update>              
+     
+     <update id="updateByOriginalId" parameterType="Clip">
+        UPDATE T_CLIP
+        SET
+			ASSETID     = #{assetid}, 
+			ORIASSETID  = #{oriassetid}, 
+			PARTID      = #{partid}, 
+			PARTNAME    = #{partname}, 
+			OTHERNME    = #{othernme}, 
+			EXTAG       = #{extag}, 
+			EVENTTAG    = #{eventtag}, 
+			KEYWORD     = #{keyword}, 
+			DIRECTOR    = #{director}, 
+			ADAPTOR     = #{adaptor}, 
+			LEADER      = #{leader}, 
+			KIND        = #{kind}, 
+			AREA        = #{area}, 
+			`LANGUAGE`  = #{language}, 
+			CAPTION     = #{caption}, 
+			TAGS        = #{tags}, 
+			STORY       = #{story}, 
+			AWARDS      = #{awards}, 
+			`YEAR`      = #{year}, 
+			DURATION    = #{duration}, 
+			UPDATETIME  = #{updatetime}, 
+			CREATETIME  = #{createtime}, 
+			RELASETIME  = #{relasetime}, 
+			INITAL      = #{inital}, 
+			SIMPLESPELL = #{simplespell}, 
+			ISINTACT    = #{isintact}, 
+			SERIALNO    = #{serialno}, 
+			PUBLISHER   = #{publisher}, 
+			PERIODS     = #{periods},
+			STATUS      = #{status}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>
+     
+    <sql id="SQLQueryClips">
+        <where>
+            <if test="id != null">
+                WHERE ID = #{id}
+            </if>
+            <if test="assetid != null and assetid !=''">
+                AND ASSETID = #{assetid}
+            </if>            
+            <if test="originalid != null and originalid !=''">
+                AND ORIGINALID = #{originalid}
+            </if>            
+            <if test="oriassetid != null and oriassetid !=''">
+                AND ORIASSETID = #{oriassetid}
+            </if>
+            <if test="partname != null and partname != ''">
+                AND PARTNAME LIKE CONCAT(CONCAT('%', #{partname}),'%')
+            </if>           
+                    
+            <if test="status != null and status != -2">
+                AND STATUS = #{status}
+            </if>
+
+            <if test="serialno != null and serialno != 0">
+                AND SERIALNO = #{serialno}
+            </if>
+            
+            <if test="beginDate != null">
+                AND INITALTIME &gt;= #{beginDate}
+            </if>
+            <if test="endDate != null">
+                AND INITALTIME &lt;= #{endDate}
+            </if>             
+        </where>    
+    </sql>
+
+     <select id="queryClipsCount" parameterType="Clip" resultType="int">
+        SELECT COUNT(ID) FROM T_CLIP
+        <include refid="SQLQueryClips"/>
+     </select>     
+
+     <select id="queryClips" parameterType="Clip" resultType="Clip">
+        SELECT * FROM T_CLIP
+        <include refid="SQLQueryClips"/>        
+        LIMIT #{limit} OFFSET #{offset}
+     </select>            
+</mapper>

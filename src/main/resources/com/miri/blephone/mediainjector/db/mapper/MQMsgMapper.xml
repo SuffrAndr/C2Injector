@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.MQMsgMapper">
+     <insert id="add" parameterType="MQMsg" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_MQMSG
+		    (
+		      PUSHCODE       ,
+		      STOREPATH      ,
+		      STORETIME      ,
+		      ASSETTYPE      ,
+		      ASSETDESC      ,
+		      ASSETOPERATION ,
+		      STATUS         ,
+		      FEEDBACKSTATUS ,
+		      FEEDBACKTIME   ,
+		      REMARK
+		    )
+		    VALUES
+		    (
+				#{pushcode},      
+				#{storePath},     
+				#{storeTime},     
+				#{assetType},     
+				#{assetDesc},     
+				#{assetOperation},
+				#{status},        
+				#{feedbackStatus},
+				#{feedbackTime},  
+				#{remark}        
+		    )
+     </insert>
+     
+     <select id="countByPushcode" resultType="int">
+        SELECT COUNT(*) FROM T_MQMSG WHERE PUSHCODE = #{pushcode}
+     </select>
+     
+     <select id="queryByPushcode" resultType="MQMsg">
+        SELECT * FROM T_MQMSG WHERE PUSHCODE = #{pushcode}
+     </select>
+     
+     <select id="queryByStatus" resultType="MQMsg">
+        SELECT * FROM T_MQMSG WHERE STATUS = #{status} LIMIT 30
+     </select>     
+     
+     <update id="updateMsgStatus">
+         UPDATE T_MQMSG SET STATUS = #{status} WHERE  ID = #{id}
+     </update>
+     
+     <update id="updateMsg" parameterType="MQMsg">
+	    UPDATE T_MQMSG
+		SET
+            PUSHCODE       = #{pushcode},      
+            STOREPATH      = #{storePath},     
+            STORETIME      = #{storeTime},     
+            ASSETTYPE      = #{assetType},     
+            ASSETDESC      = #{assetDesc},     
+            ASSETOPERATION = #{assetOperation},
+            STATUS         = #{status},        
+            FEEDBACKSTATUS = #{feedbackStatus},
+            FEEDBACKTIME   = #{feedbackTime},  
+            REMARK         = #{remark}       
+		WHERE
+		    ID             = #{id}    
+     </update>
+</mapper>

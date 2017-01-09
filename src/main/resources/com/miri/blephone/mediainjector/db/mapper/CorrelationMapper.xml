@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.CorrelationMapper">
+     <insert id="add" parameterType="Correlation" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_CORRELATION
+		    (
+				ID          ,         
+				COLUMNID    ,        
+				ASSETID     ,        
+				`ORDER`     ,         
+				EXTENSIONFIELD1, 
+				ORIASSETID      
+		    )
+		    VALUES
+		    (
+				#{id},
+				#{columnid},
+				#{assetid},
+				#{order},
+				#{extensionfield1},     
+				#{oriassetid}
+		    )
+     </insert>
+     
+     <select id="countByCorrelation" resultType="int">
+        SELECT  COUNT(*) 
+        FROM    T_CORRELATION 
+        WHERE   COLUMNID    = #{columnid}  
+        AND     ORIASSETID  = #{oriassetid}
+     </select>
+     
+     <update id="update" parameterType="Correlation">
+	    UPDATE T_CORRELATION
+		SET
+			 ASSETID             = #{assetid},        
+			 `ORDER`             = #{order},         
+			 EXTENSIONFIELD1     = #{extensionfield1}
+		WHERE
+		      COLUMNID           = #{columnid}  
+		AND   ORIASSETID         = #{oriassetid}
+     </update>
+     
+     <delete id="delete">
+        DELETE  FROM    T_CORRELATION 
+        WHERE   COLUMNID    = #{columnid}  
+        AND     ORIASSETID  = #{oriassetid}
+     </delete>
+</mapper>

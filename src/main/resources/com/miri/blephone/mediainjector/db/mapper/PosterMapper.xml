@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.PosterMapper">
+     <insert id="add" parameterType="Poster" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_POSTER
+		    (
+		      ID         ,
+		      ORIGINALID ,
+		      IMAGEID    ,
+		      TYPE       ,
+		      FILENAME   ,
+		      RESOLUTION ,
+		      IMGTYPE    ,
+		      FILESIZE   ,
+		      IMGHASH    ,
+		      INITALTIME ,
+		      OBJECTID   ,
+		      STATUS
+		    )
+		    VALUES
+		    (
+		        #{id},  
+				#{originalid},
+				#{imageid},
+				#{type},   
+				#{filename},
+				#{resolution},
+				#{imgtype},
+				#{filesize},  
+				#{imghash},
+				#{initalTime},
+				#{objectId},
+				#{status}
+		    )
+     </insert>
+
+     <select id="queryByByOriginalId" resultType="Poster">
+        SELECT *                 
+        FROM  T_POSTER 
+        WHERE ORIGINALID   = #{originalId}
+        AND   TYPE         = #{type}
+     </select>
+
+     <select id="queryInectByOriginalId" resultType="Poster">
+        SELECT *                 
+        FROM  T_POSTER 
+        WHERE ORIGINALID   = #{originalId}
+        AND   TYPE         = #{type}
+        AND   (IMGTYPE = 1 OR IMGTYPE = 2)
+        ORDER   BY IMGTYPE DESC
+     </select>
+     
+     <select id="countByOriginalId" resultType="int">
+        SELECT COUNT(*) FROM T_POSTER WHERE ORIGINALID = #{originalId}
+     </select>
+     
+     <update id="updateByOriginalId" parameterType="Poster">
+        UPDATE
+            T_CATEGORY
+        SET
+              FILENAME   = #{filename},
+              RESOLUTION = #{resolution},
+              IMGTYPE    = #{imgtype},
+              FILESIZE   = #{filesize},  
+              IMGHASH    = #{imghash},
+              STATUS     = #{status}
+        WHERE ORIGINALID = #{originalid}
+        AND IMAGEID      = #{imageid} 
+        AND TYPE         = #{type}    
+     </update>     
+</mapper>

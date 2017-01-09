@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.ColumnMapper">
+     <insert id="add" parameterType="Column" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_COLUMN
+		    (
+				ID              ,
+				COLUMNID        ,
+				COLUMNNAME      ,
+				PARENTID        ,
+				`ORDER`         ,
+				EXTENSIONFIELD1 
+		    )
+		    VALUES
+		    (
+				#{id},
+				#{columnid},
+				#{columnname},
+				#{parentid},
+				#{order},
+				#{extensionfield1}     
+		    )
+     </insert>
+     
+     <select id="countByColumnId" resultType="int">
+        SELECT COUNT(*) FROM T_COLUMN WHERE COLUMNID = #{columnid}
+     </select>
+     
+     <update id="update" parameterType="Column">
+	    UPDATE T_COLUMN
+		SET
+                COLUMNID        = #{columnid},
+                COLUMNNAME      = #{columnname},
+                PARENTID        = #{parentid},
+                `ORDER`         = #{order},
+                EXTENSIONFIELD1 = #{extensionfield1},
+                UPDATETIME      = #{updateTime} 
+		WHERE
+		        ID              = #{id}    
+     </update>
+     
+     <delete id="delete">
+        DELETE FROM T_COLUMN WHERE COLUMNID = #{columnid}
+     </delete>
+</mapper>

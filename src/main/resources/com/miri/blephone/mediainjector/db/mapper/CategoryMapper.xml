@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.CategoryMapper">
+     <insert id="add" parameterType="Category" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_CATEGORY
+		    (
+		      ID              ,
+		      ASSETID         ,
+		      ORIGINALID      ,
+		      BASEID          ,
+		      ASSETPATH       ,
+		      FSTNAME         ,
+		      FSTLVLID        ,
+		      EXTAG           ,
+		      CLIPNAME        ,
+		      OTHERNME        ,
+		      KEYWORD         ,
+		      DIRECTOR        ,
+		      ADAPTOR         ,
+		      LEADER          ,
+		      KIND            ,
+		      AREA            ,
+		      LANGUAGE        ,
+		      CAPTION         ,
+		      TAGS            ,
+		      STORY           ,
+		      AWARDS          ,
+		      YEAR            ,
+		      DURATION        ,
+		      UPDATETIME      ,
+		      CREATETIME      ,
+		      RELASETIME      ,
+		      PLAYTIME        ,
+		      INITAL          ,
+		      FULLSPELL       ,
+		      SIMPLESPELL     ,
+		      SERIALCOUNT     ,
+		      PRODUCTID       ,
+		      PRODUCERNAME    ,
+		      CHANNEL         ,
+		      COUNTRYCODE     ,
+		      CANDOWN         ,
+		      FILMORSINGLESET ,
+		      PERIODS         ,
+		      STATUS          ,
+		      INITALTIME      ,
+		      OBJECTID
+		    )
+		    VALUES
+		    (
+		        #{id},  
+				#{assetid},
+				#{originalid},
+				#{baseId},
+				#{assetpath},
+				#{fstname},
+				#{fstlvlid},
+				#{extag},
+				#{clipname},
+				#{othernme},
+				#{keyword},
+				#{director},
+				#{adaptor},
+				#{leader},
+				#{kind},
+				#{area},
+				#{language},
+				#{caption},
+				#{tags},
+				#{story},
+				#{awards},
+				#{year},
+				#{duration},
+				#{updatetime},
+				#{createtime},
+				#{relasetime},
+				#{playtime},
+				#{inital},
+				#{fullspell},
+				#{simplespell},
+				#{serialcount},
+				#{productid},
+				#{producername},
+				#{channel},
+				#{countrycode},
+				#{canDown},
+				#{filmorsingleset},
+				#{periods},
+				#{status} ,
+				#{initalTime},
+				#{objectId}
+		    )
+     </insert>
+     
+     <select id="countByOriginalId" resultType="int">
+        SELECT COUNT(*) FROM T_CATEGORY WHERE ORIGINALID = #{originalId}
+     </select>
+     
+     <select id="querySeriesByStatus" resultType="Category">
+        SELECT * FROM T_CATEGORY WHERE STATUS = #{status} AND SERIALCOUNT &gt; 1 LIMIT 10
+     </select>
+     
+     <select id="queryByOriginalId" resultType="Category">
+        SELECT * FROM T_CATEGORY WHERE ORIGINALID = #{originalId}
+     </select>
+     
+     <select id="queryMovicesByStatus" resultType="Category">
+        <![CDATA[
+        SELECT * FROM T_CATEGORY A, T_FILE B WHERE A.STATUS = #{status} AND A.SERIALCOUNT = 1 
+        AND A.ORIGINALID = B.ORIASSETID AND  B.DOWNLOADSTATUS  =  2
+        AND B.FILEFORMATDESC  >= 2 LIMIT 10
+        ]]>
+     </select>
+
+    <sql id="SQLQueryCategorys">
+        <where>
+            <if test="id != null">
+                WHERE ID = #{id}
+            </if> 
+            <if test="assetid != null and assetid !=''">
+                AND ASSETID = #{assetid}
+            </if>                   
+            <if test="clipname != null and clipname != ''">
+                AND CLIPNAME LIKE CONCAT(CONCAT('%', #{clipname}),'%')
+            </if>
+            <if test="status != null and status != -2">
+                AND STATUS = #{status}
+            </if>
+            <if test="beginDate != null">
+                AND INITALTIME &gt;= #{beginDate}
+            </if>
+            <if test="endDate != null">
+                AND INITALTIME &lt;= #{endDate}
+            </if>                                            
+        </where>    
+    </sql>
+
+     <select id="queryCategorysCount" parameterType="Category" resultType="int">
+        SELECT COUNT(ID) FROM T_CATEGORY
+        <include refid="SQLQueryCategorys"/>
+     </select>     
+
+     <select id="queryCategorys" parameterType="Category" resultType="Category">
+        SELECT * FROM T_CATEGORY
+        <include refid="SQLQueryCategorys"/>        
+        ORDER BY ID DESC 
+        LIMIT #{limit} OFFSET #{offset}
+     </select>     
+
+     <update id="updateStatusByOriginalId">
+        UPDATE
+            T_CATEGORY
+        SET
+            STATUS          = #{status}
+        WHERE
+            ORIGINALID      = #{originalId}    
+     </update>
+     
+     <update id="updateStatusByObjectId">
+        UPDATE
+            T_CATEGORY
+        SET
+            STATUS          = #{status}
+        WHERE
+            OBJECTID      = #{objectId}    
+     </update>     
+     
+     <update id="updateByOriginalId"  parameterType="Category">
+        UPDATE
+            T_CATEGORY
+        SET
+            ASSETID         = #{assetid},
+            BASEID          = #{baseId},
+            ASSETPATH       = #{assetpath},
+            FSTNAME         = #{fstname},
+            FSTLVLID        = #{fstlvlid},
+            EXTAG           = #{extag},
+            CLIPNAME        = #{clipname},
+            OTHERNME        = #{othernme},
+            KEYWORD         = #{keyword},
+            DIRECTOR        = #{director},
+            ADAPTOR         = #{adaptor},
+            LEADER          = #{leader},
+            KIND            = #{kind},
+            AREA            = #{area},
+            LANGUAGE        = #{language},
+            CAPTION         = #{caption},
+            TAGS            = #{tags},
+            STORY           = #{story},
+            AWARDS          = #{awards},
+            YEAR            = #{year},
+            DURATION        = #{duration},
+            UPDATETIME      = #{updatetime},
+            CREATETIME      = #{createtime},
+            RELASETIME      = #{relasetime},
+            PLAYTIME        = #{playtime},
+            INITAL          = #{inital},
+            FULLSPELL       = #{fullspell},
+            SIMPLESPELL     = #{simplespell},
+            SERIALCOUNT     = #{serialcount},
+            PRODUCTID       = #{productid},
+            PRODUCERNAME    = #{producername},
+            CHANNEL         = #{channel},
+            COUNTRYCODE     = #{countrycode},
+            CANDOWN         = #{canDown},
+            FILMORSINGLESET = #{filmorsingleset},
+            PERIODS         = #{periods},
+            STATUS          = #{status}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>     
+</mapper>

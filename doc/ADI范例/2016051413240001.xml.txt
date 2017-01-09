@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ADI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" StaffID="143">
+    <Objects>
+        <Object Action="REGIST" Code="CP23010020160514048700" ElementType="Program" ID="CP23010020160514048700">
+            <Property Name="ActorDisplay"/>
+            <Property Name="CPID">WASU</Property>
+            <Property Name="Compere"/>
+            <Property Name="ContentProvider">WASU</Property>
+            <Property Name="CopyRight"/>
+            <Property Name="Description"/>
+            <Property Name="Director"/>
+            <Property Name="Duration">6</Property>
+            <Property Name="Guest"/>
+            <Property Name="Kpeople"/>
+            <Property Name="Language">国语</Property>
+            <Property Name="LicensingWindowStart">20160514000000</Property>
+            <Property Name="LicensingWindowEnd">20660514000000</Property>
+            <Property Name="Name">江西：新型传销骗局 电子币变K币</Property>
+            <Property Name="OriginalName"/>
+            <Property Name="PriceTaxIn"/>
+            <Property Name="ReleaseYear">2016</Property>
+            <Property Name="SearchName"/>
+            <Property Name="SortName"/>
+            <Property Name="SourceType">1</Property>
+            <Property Name="Status">1</Property>
+            <Property Name="VSPCode">100</Property>
+            <Property Name="OriginalCountry">其他</Property>
+            <Property Name="OPIncharge">国内新闻</Property>
+        </Object>
+        <Object Action="REGIST" Code="CP23010020160514048706" ElementType="Movie" ID="CP23010020160514048706">
+            <Property Name="ClosedCaptioning">0</Property>
+            <Property Name="ScreenFormat">1</Property>
+            <Property Name="AudioType">0</Property>
+            <Property Name="FileURL">ftp://wasu:wasu@125.210.29.195:21/movies/FTP/CP23010020160514048700/20160514132017_jiangxixinxingchuanxiaopianjudianzibibianKbi_1365568688_1365568872.ts</Property>
+            <Property Name="MediaSpec">TS-CBR-H.264-2300-576i-25-MP2-128000</Property>
+            <Property Name="Name">江西：新型传销骗局 电子币变K币_34_ts(h264+mp2)-2300(2100+128)-720576 </Property>
+            <Property Name="Type">1</Property>
+        </Object>
+    </Objects>
+    <Mappings>
+        <Mapping Action="REGIST" ElementCode="CP23010020160514048706" ElementID="CP23010020160514048706" ElementType="Movie" ParentCode="CP23010020160514048700" ParentID="CP23010020160514048700" ParentType="Program"/>
+    </Mappings>
+</ADI>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+ <globalConfiguration>
+  <parameter name="sendMultiRefs" value="true"/>
+  <parameter name="disablePrettyXML" value="true"/>
+  <parameter name="adminPassword" value="admin"/>
+  <parameter name="attachments.Directory" value="WEB-INF/attachments"/>
+  <parameter name="dotNetSoapEncFix" value="true"/>
+  <parameter name="enableNamespacePrefixOptimization" value="false"/>
+  <parameter name="sendXMLDeclaration" value="true"/>
+  <parameter name="sendXsiTypes" value="true"/>
+  <parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>
+  <requestFlow>
+   <handler type="java:org.apache.axis.handlers.JWSHandler">
+    <parameter name="scope" value="session"/>
+   </handler>
+   <handler type="java:org.apache.axis.handlers.JWSHandler">
+    <parameter name="scope" value="request"/>
+    <parameter name="extension" value=".jwr"/>
+   </handler>
+  </requestFlow>
+ </globalConfiguration>
+ <handler name="URLMapper" type="java:org.apache.axis.handlers.http.URLMapper"/>
+ <handler name="Authenticate" type="java:org.apache.axis.handlers.SimpleAuthenticationHandler"/>
+ <handler name="LocalResponder" type="java:org.apache.axis.transport.local.LocalResponder"/>
+ <service name="AdminService" provider="java:MSG">
+  <parameter name="allowedMethods" value="AdminService"/>
+  <parameter name="enableRemoteAdmin" value="false"/>
+  <parameter name="className" value="org.apache.axis.utils.Admin"/>
+  <namespace>http://xml.apache.org/axis/wsdd/</namespace>
+ </service>
+ <service name="Version" provider="java:RPC">
+  <parameter name="allowedMethods" value="getVersion"/>
+  <parameter name="className" value="org.apache.axis.Version"/>
+ </service>
+ <service name="ctms" provider="java:RPC">
+  <operation name="resultNotify" qname="ns1:ResultNotify" returnQName="ResultNotifyReturn" returnType="ns1:CSPResult" soapAction="" xmlns:ns1="iptv">
+   <parameter name="CSPID" type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <parameter name="LSPID" type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <parameter name="CorrelateID" type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <parameter name="CmdResult" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+   <parameter name="ResultFileURL" type="soapenc:string" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"/>
+  </operation>
+  <parameter name="allowedMethods" value="resultNotify"/>
+  <parameter name="typeMappingVersion" value="1.2"/>
+  <parameter name="wsdlPortType" value="CSPResponse"/>
+  <parameter name="className" value="com.miri.blephone.mediainjector.iptv.c2.notify.CtmsSoapBindingImpl"/>
+  <parameter name="wsdlServicePort" value="ctms"/>
+  <parameter name="wsdlTargetNamespace" value="iptv"/>
+  <parameter name="wsdlServiceElement" value="CSPResponseService"/>
+  <parameter name="schemaUnqualified" value="iptv"/>
+  <typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" qname="ns2:CSPResult" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:com.miri.blephone.mediainjector.iptv.c2.notify.CSPResult" xmlns:ns2="iptv"/>
+ </service>
+ <transport name="http">
+  <requestFlow>
+   <handler type="URLMapper"/>
+   <handler type="java:org.apache.axis.handlers.http.HTTPAuthHandler"/>
+  </requestFlow>
+  <parameter name="qs:list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <parameter name="qs:wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+  <parameter name="qs.list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <parameter name="qs.method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <parameter name="qs:method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <parameter name="qs.wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+ </transport>
+ <transport name="local">
+  <responseFlow>
+   <handler type="LocalResponder"/>
+  </responseFlow>
+ </transport>
+</deployment>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miri.blephone.mediainjector.db.mapper.FileMapper">
+     <insert id="add" parameterType="File" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO T_FILE
+		    (
+				ID                 ,
+				FILEID             ,
+				ORIGINALID         ,
+				ENTITYFILEID       ,
+				ASSETID            ,
+				ORIASSETID         ,
+				ORIPARTID          ,
+				PARTID             ,
+				FILENAME           ,
+				FILEFORMATDESC     ,
+				FILESIZE           ,
+				FILEBITRATE        ,
+				FILEDURATION       ,
+				FILEFORMAT         ,
+				IS3D               ,
+				FILEHASH           ,
+				VIDEOBITRATE       ,
+				VIDEOFORMAT        ,
+				VIDEOINFO          ,
+				VIDEOINTRODUCTION  ,
+				VIDEOWIDTH         ,
+				VIDEOHEIGHT        ,
+				VIDEOSCALE         ,
+				VIDEOLENGTH        ,
+				VIDEOSETCABAC      ,
+				FORMATSETREFRAMES  ,
+				FRAMERATE          ,
+				CRITERION          ,
+				VGA                ,
+				COLORIMETRY        ,
+				SCANTYPE           ,
+				DATADENSITY        ,
+				ENCODEDLIBRARY     ,
+				ENCODEDLIBSET      ,
+				AUDIOFORMAT        ,
+				AUDIOINFO          ,
+				AUDIOINTRODUTION   ,
+				AUDIOVERSION       ,
+				AUDIOMUXINGMODE    ,
+				AUDIODURATION      ,
+				AUDIOTRACK         ,
+				AUDIOSAMPLING      ,
+				AUDIORATEMODE      ,
+				FILESOURCE         ,
+				ISDRM              ,
+				ENCRYPTSOLUTION    ,
+				THIRDFILEID        ,
+				OVERALLBITRATEMODE ,
+				CREATETIME         ,
+				STATUS             ,
+				INITALTIME         ,
+				OBJECTID           ,
+				DOWNLOADSTATUS
+		    )
+		    VALUES
+		    (
+				#{id}, 
+				#{fileid},
+				#{originalid},
+				#{entityfileid},
+				#{assetid},
+				#{oriassetid},
+				#{oripartid},
+				#{partid},
+				#{filename},
+				#{fileformatdesc},
+				#{filesize},
+				#{filebitrate},
+				#{fileduration},
+				#{fileformat},
+				#{is3D},
+				#{filehash},
+				#{videobitrate},
+				#{videoformat},
+				#{videoinfo},
+				#{videointroduction},
+				#{videowidth},
+				#{videoheight},
+				#{videoscale},
+				#{videolength},
+				#{videosetcabac},
+				#{formatsetreframes},
+				#{framerate},
+				#{criterion},
+				#{vga},
+				#{colorimetry},
+				#{scantype},
+				#{datadensity},
+				#{encodedlibrary},
+				#{encodedlibset},
+				#{audioformat},
+				#{audioinfo},
+				#{audiointrodution},
+				#{audioversion},
+				#{audiomuxingmode},
+				#{audioduration},
+				#{audiotrack},
+				#{audiosampling},
+				#{audioratemode},
+				#{filesource},
+				#{isdrm},
+				#{encryptsolution},
+				#{thirdfileid},
+				#{overallbitratemode},
+				#{createtime},
+				#{status},
+				#{initalTime},
+				#{objectId},
+				#{downloadStatus}
+		    )
+     </insert>
+     
+     <select id="queryByOriginalId"  resultType="File">
+        SELECT * FROM T_FILE WHERE ORIGINALID = #{originalId}
+     </select>
+     
+     <select id="queryByFileformatdesc"  resultType="File">
+        <![CDATA[
+	        SELECT * FROM T_FILE WHERE ORIPARTID = #{oripartid} 
+	        AND FILEFORMATDESC = #{fileformatdesc} 
+	        AND (CREATETIME IS NULL OR  unix_timestamp(CREATETIME) <= unix_timestamp(createtime)) 
+	        AND STATUS != 3
+        ]]>
+     </select>     
+     
+     <select id="queryByStatus" resultType="File">
+        SELECT * FROM T_FILE WHERE STATUS = #{status}
+     </select>
+     
+
+     <select id="queryExpireFiles" resultType="File">
+        SELECT * FROM T_FILE 
+        WHERE  (STATUS = 3 AND DOWNLOADSTATUS = -1) 
+        OR  (STATUS = 3 AND DOWNLOADSTATUS = 2)
+        OR  (STATUS = 6 AND DOWNLOADSTATUS =2) 
+        LIMIT 10 
+     </select>
+     
+     <select id="queryByOripartId" resultType="File">
+        <![CDATA[
+        SELECT  * 
+        FROM    T_FILE 
+        WHERE   ORIPARTID       = #{oripartid}
+        AND     DOWNLOADSTATUS  =  2
+        AND     FILEFORMATDESC  >= 2 
+        AND     STATUS  IN (1,2) 
+        ORDER BY FILEBITRATE DESC
+        LIMIT  1
+        ]]>
+     </select>
+     
+     <update id="updateStatusByOriginalId">
+        UPDATE
+            T_FILE
+        SET
+            STATUS          = #{status}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>
+     
+     <update id="updateDownloadStatusByOriginalId">
+        UPDATE
+            T_FILE
+        SET
+            DOWNLOADSTATUS  = #{downloadStatus}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>
+
+     <update id="updateStatusAndDownloadStatusByOriginalId">
+        UPDATE
+            T_FILE
+        SET
+            STATUS          = #{status},
+            DOWNLOADSTATUS  = #{downloadStatus}
+        WHERE
+            ORIGINALID      = #{originalid}    
+     </update>
+     
+     <update id="updateStatusByObjectId">
+        UPDATE
+            T_FILE
+        SET
+            STATUS          = #{status}
+        WHERE
+            OBJECTID        = #{objectId}    
+     </update>                 
+     
+     <update id="updateByOriginalId" parameterType="File">
+        UPDATE   T_FILE
+        SET
+                FILEID                 = #{fileid},                              
+                ENTITYFILEID           = #{entityfileid},                              
+                ASSETID                = #{assetid},                              
+                ORIASSETID             = #{oriassetid},                              
+                ORIPARTID              = #{oripartid},                              
+                PARTID                 = #{partid},                              
+                FILENAME               = #{filename},                              
+                FILEFORMATDESC         = #{fileformatdesc},                              
+                FILESIZE               = #{filesize},                              
+                FILEBITRATE            = #{filebitrate},                              
+                FILEDURATION           = #{fileduration},                              
+                FILEFORMAT             = #{fileformat},                              
+                IS3D                   = #{is3D},                              
+                FILEHASH               = #{filehash},                              
+                VIDEOBITRATE           = #{videobitrate},                              
+                VIDEOFORMAT            = #{videoformat},                              
+                VIDEOINFO              = #{videoinfo},                              
+                VIDEOINTRODUCTION      = #{videointroduction},                              
+                VIDEOWIDTH             = #{videowidth},                              
+                VIDEOHEIGHT            = #{videoheight},                              
+                VIDEOSCALE             = #{videoscale},                              
+                VIDEOLENGTH            = #{videolength},                              
+                VIDEOSETCABAC          = #{videosetcabac},                              
+                FORMATSETREFRAMES      = #{formatsetreframes},                              
+                FRAMERATE              = #{framerate},                              
+                CRITERION              = #{criterion},                              
+                VGA                    = #{vga},                              
+                COLORIMETRY            = #{colorimetry},                              
+                SCANTYPE               = #{scantype},                              
+                DATADENSITY            = #{datadensity},                              
+                ENCODEDLIBRARY         = #{encodedlibrary},                              
+                ENCODEDLIBSET          = #{encodedlibset},                              
+                AUDIOFORMAT            = #{audioformat},                              
+                AUDIOINFO              = #{audioinfo},                              
+                AUDIOINTRODUTION       = #{audiointrodution},                              
+                AUDIOVERSION           = #{audioversion},                              
+                AUDIOMUXINGMODE        = #{audiomuxingmode},                              
+                AUDIODURATION          = #{audioduration},                              
+                AUDIOTRACK             = #{audiotrack},                              
+                AUDIOSAMPLING          = #{audiosampling},                              
+                AUDIORATEMODE          = #{audioratemode},                              
+                FILESOURCE             = #{filesource},                              
+                ISDRM                  = #{isdrm},                              
+                ENCRYPTSOLUTION        = #{encryptsolution},                              
+                THIRDFILEID            = #{thirdfileid},                              
+                OVERALLBITRATEMODE     = #{overallbitratemode},
+                CREATETIME             = #{createtime},
+                STATUS                 = #{status}                              
+        WHERE
+                ORIGINALID             = #{originalid}    
+     </update>
+
+    <sql id="SQLQueryFiles">
+        <where>
+            <if test="id != null">
+                WHERE ID = #{id}
+            </if> 
+            <if test="assetid != null and assetid !=''">
+                AND ASSETID = #{assetid}
+            </if>            
+            <if test="oriassetid != null and oriassetid !=''">
+                AND ORIASSETID = #{oriassetid}
+            </if>
+            <if test="oripartid != null and oripartid !=''">
+                AND ORIPARTID = #{oripartid}
+            </if>                               
+            <if test="status != null and status != -2">
+                AND STATUS = #{status}
+            </if>
+            <if test="downloadStatus != null and downloadStatus != -2">
+                AND DOWNLOADSTATUS = #{downloadStatus}
+            </if>
+            <if test="fileformatdesc != null and fileformatdesc != -1">
+                AND FILEFORMATDESC = #{fileformatdesc}
+            </if>            
+        </where>    
+    </sql>
+
+     <select id="queryFilesCount" parameterType="File" resultType="int">
+        SELECT COUNT(ID) FROM T_FILE
+        <include refid="SQLQueryFiles"/>
+     </select>     
+
+     <select id="queryFiles" parameterType="File" resultType="File">
+        SELECT * FROM T_FILE
+        <include refid="SQLQueryFiles"/>        
+        ORDER BY ID DESC 
+        LIMIT #{limit} OFFSET #{offset}
+     </select>        
+          
+</mapper>
