@@ -1,17 +1,13 @@
 package com.miri.blephone.mediainjector.converter;
 
-import java.util.List;
-import java.util.Locale;
+import com.google.common.collect.*;
+import com.miri.blephone.mediainjector.db.domain.*;
+import com.miri.blephone.mediainjector.iptv.c2.adi.*;
+import com.miri.blephone.mediainjector.uitls.*;
+import org.apache.commons.lang.*;
+import org.springframework.stereotype.*;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-
-import com.google.common.collect.Lists;
-import com.miri.blephone.mediainjector.db.domain.Category;
-import com.miri.blephone.mediainjector.iptv.c2.adi.ADIElementConstants;
-import com.miri.blephone.mediainjector.iptv.c2.adi.PropertyType;
-import com.miri.blephone.mediainjector.uitls.DateUtils;
-import com.miri.blephone.mediainjector.uitls.PropsTypeUtils;
+import java.util.*;
 
 @Component
 public class CategoryConverter extends AbstractConverter {
@@ -118,11 +114,6 @@ public class CategoryConverter extends AbstractConverter {
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASLASTCHANCE, StringUtils.EMPTY));
 
         propTypes.add(PropsTypeUtils.buildPriceProps());
-
-        // TODO:南传额外的定义字段值
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.CRBEGINDATE,
-                DateUtils.getReleaseDate(a.getRelasetime())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.CRENDDATE, StringUtils.EMPTY));
 
         propTypes.addAll(PropsTypeUtils.buildReserveProps());
 
