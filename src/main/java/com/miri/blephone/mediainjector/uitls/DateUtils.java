@@ -1,9 +1,9 @@
 package com.miri.blephone.mediainjector.uitls;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.joda.time.*;
 
-import org.joda.time.DateTime;
+import java.text.*;
+import java.util.*;
 
 public class DateUtils {
 
@@ -21,14 +21,14 @@ public class DateUtils {
 
     public static String getNowDateTime() {
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        final SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
 
         return sdf.format(DateTime.now().toDate());
     }
 
     public static String getEndDateTime() {
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        final SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
 
         return sdf.format(DateTime.now().plusYears(30).toDate());
     }
