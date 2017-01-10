@@ -252,8 +252,11 @@
                                     break;   
                                 case 6:
                                     return "注入完成";
-                                    break;                                    
-								default:
+                                    break;
+                                case 7:
+		                            return "注入失败";
+		                            break;
+	                            default:
 									break;
 								};
                             }	
