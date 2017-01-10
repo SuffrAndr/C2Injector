@@ -575,6 +575,16 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
+				<configuration>
+					<scanIntervalSeconds>3000000</scanIntervalSeconds>
+					<httpConnector>
+						<port>8000</port>
+					</httpConnector>
+					<webAppConfig>
+						<!-- 设置默认webdefault.xml,这个主要是为了禁止jetty启动之后,锁定文件.需要修改webdefault.xml里面的useFileMappedBuffer属性为false -->
+						<contextPath>/</contextPath>
+					</webAppConfig>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
