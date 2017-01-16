@@ -1,13 +1,11 @@
 package com.miri.blephone.mediainjector.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.*;
+import com.miri.blephone.mediainjector.uitls.*;
+import org.apache.commons.lang.*;
 import org.apache.commons.lang.math.NumberUtils;
 
-import com.google.common.base.Joiner;
-import com.miri.blephone.mediainjector.uitls.PinyinUtils;
+import java.util.*;
 
 public abstract class AbstractConverter {
 
@@ -162,6 +160,36 @@ public abstract class AbstractConverter {
         }
 
         return rst;
+    }
+
+
+    protected static int convertDefinition(int fileformatdesc) {
+
+        int  definition;
+
+        switch (fileformatdesc)
+        {
+            case 0:
+                definition = 0;
+                break;
+            case 1:
+                definition = 0;
+                break;
+            case 2:
+                definition = 1;
+                break;
+            case 3:
+                definition = 2;
+                break;
+            case 9:
+                definition = 3;
+                break;
+	        default:
+		        definition = 0;
+		        break;
+        }
+
+        return definition;
     }
 
     public static void main(final String[] args) {

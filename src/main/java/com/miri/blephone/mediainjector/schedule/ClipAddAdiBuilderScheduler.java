@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import com.google.common.collect.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import com.miri.blephone.mediainjector.converter.ClipConverter;
 import com.miri.blephone.mediainjector.converter.FileConverter;
 import com.miri.blephone.mediainjector.db.DBConstans;
@@ -106,7 +106,7 @@ public class ClipAddAdiBuilderScheduler extends BuilderScheduler implements Init
                         pObj.setAction(ADIConstants.Action.REGIST);
                         pObj.setElementType(ADIConstants.ElementType.Program);
 
-                        final List<PropertyType> propertyTypes = this.clipConverter.convert(category, clip);
+                        final List<PropertyType> propertyTypes = this.clipConverter.convert(category, clip, file.getFileformatdesc());
 
                         pObj.getProperty().addAll(propertyTypes);
 

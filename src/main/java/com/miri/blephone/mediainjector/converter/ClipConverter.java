@@ -12,11 +12,11 @@ import java.util.*;
 @Component
 public class ClipConverter extends AbstractConverter {
 
-    public List<PropertyType> convert(final Category category, final Clip clip) {
-        return this.convert(false, category, clip);
+    public List<PropertyType> convert(final Category category, final Clip clip, int definition) {
+        return this.convert(false, category, clip, definition);
     }
 
-    public List<PropertyType> convert(boolean movieFlag, final Category category, final Clip clip) {
+    public List<PropertyType> convert(boolean movieFlag, final Category category, final Clip clip, int definition) {
 
         String partname = movieFlag ? category.getClipname() : clip.getPartname();
 
@@ -118,6 +118,11 @@ public class ClipConverter extends AbstractConverter {
         releaseYear.setName(ADIElementConstants.RELEASEYEAR);
         releaseYear.setValue(String.valueOf(category.getYear()));
         propTypes.add(releaseYear);
+
+        final PropertyType definitionFlag = new PropertyType();
+        definitionFlag.setName(ADIElementConstants.Program.DEFINITIONFLAG);
+        definitionFlag.setValue(String.valueOf(convertDefinition(definition)));
+        propTypes.add(definitionFlag);
 
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DURATION,
                 AbstractConverter.convertDuration(clip.getDuration())));
