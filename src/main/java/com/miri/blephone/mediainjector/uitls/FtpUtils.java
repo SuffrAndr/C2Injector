@@ -1,18 +1,12 @@
 package com.miri.blephone.mediainjector.uitls;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.*;
+import java.net.*;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.joda.time.DateTime;
+import org.apache.commons.io.*;
+import org.apache.commons.lang.*;
+import org.apache.commons.net.ftp.*;
+import org.joda.time.*;
 
 public final class FtpUtils {
 
@@ -30,7 +24,14 @@ public final class FtpUtils {
             String password = splits[1];
 
             String host = uri.getHost();
+
             int port = uri.getPort();
+
+            if(port == -1)
+            {
+            	port = 21;
+            }
+
             String path = uri.getPath();
 
             int reply;
@@ -98,4 +99,5 @@ public final class FtpUtils {
         URI uri = new URI(ftpPrifx);
         return uri.getPath();
     }
+
 }

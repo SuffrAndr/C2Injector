@@ -5,72 +5,168 @@
 
 package com.miri.blephone.mediainjector.iptv.c2.notify;
 
-import java.rmi.RemoteException;
-import java.util.List;
+import java.rmi.*;
+import java.util.*;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.bind.*;
 
-import com.miri.blephone.mediainjector.db.DBConstans;
-import com.miri.blephone.mediainjector.db.dao.DbRepository;
-import com.miri.blephone.mediainjector.db.domain.WsMsg;
-import com.miri.blephone.mediainjector.iptv.c2.adi.ADIConstants;
-import com.miri.blephone.mediainjector.uitls.SpringFactoryUtils;
+import org.apache.commons.collections.*;
+import org.apache.commons.lang.*;
+import org.apache.commons.lang.builder.*;
+import org.apache.commons.lang3.tuple.*;
+import org.joda.time.*;
+import org.slf4j.*;
+
+import com.miri.blephone.mediainjector.config.*;
+import com.miri.blephone.mediainjector.db.*;
+import com.miri.blephone.mediainjector.db.dao.*;
+import com.miri.blephone.mediainjector.db.domain.*;
+import com.miri.blephone.mediainjector.iptv.c2.adi.*;
+import com.miri.blephone.mediainjector.iptv.c2.adi.rsp.*;
+import com.miri.blephone.mediainjector.uitls.*;
 
 public class CtmsSoapBindingImpl implements CSPResponse {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CtmsSoapBindingImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CtmsSoapBindingImpl.class);
+    static JAXBContext jaxb;
 
-	public CSPResult resultNotify(final String CSPID, final String LSPID, final String correlateID, final int cmdResult,
-			final String resultFileURL) throws RemoteException {
+    static {
+        try {
+            jaxb = JAXBContext.newInstance(RspADI.class);
+        }
+        catch (JAXBException e) {
+            LOG.error("JAXBContext init fial.", e);
+        }
+    }
 
-		CtmsSoapBindingImpl.LOG.info("correlateID [{}] {}", correlateID, cmdResult);
+    private final GlobalConfig globalConfig = GlobalConfig.getInstance();
 
-		CSPResult cspResult = null;
-		try {
+    public CSPResult resultNotify(final String CSPID, final String LSPID, final String correlateID, final int cmdResult,
+            final String resultFileURL) throws RemoteException {
 
-			final DbRepository dbRepository = SpringFactoryUtils.getBean("dbRepository");
+        CtmsSoapBindingImpl.LOG.info("correlateID [{}] {}", correlateID, cmdResult);
 
-			final List<WsMsg> wsMsgs = dbRepository.queryWSMsgByCorrelateId(correlateID);
+        CSPResult cspResult = null;
+        try {
 
-			if (CollectionUtils.isNotEmpty(wsMsgs))
+            final DbRepository dbRepository = SpringFactoryUtils.getBean("dbRepository");
 
-				for (final WsMsg wsMsg : wsMsgs) {
+            String outputDir = this.globalConfig.getString(ConfigConstants.IPTV.STORE_PATH);
 
-					int status = wsMsg.getStatus();
+            final List<WsMsg> wsMsgs = dbRepository.queryWSMsgByCorrelateId(correlateID);
 
-					int assetStatus = DBConstans.AssetStatus.ADI_DEPLOYED;
-					if (cmdResult == 0) {
-						status = DBConstans.WsStatus.INJECT_SUCESS;
-						assetStatus = DBConstans.AssetStatus.INJECTED;
-					} else
-						status = DBConstans.WsStatus.INJECT_FAIL;
+            if (CollectionUtils.isNotEmpty(wsMsgs))
 
-					wsMsg.setStatus(status);
-					wsMsg.setUpdateTime(DateTime.now().toDate());
-					wsMsg.setResultFileUrl(resultFileURL);
+                for (final WsMsg wsMsg : wsMsgs) {
 
-					dbRepository.updateWSMsgStatus(wsMsg);
+                    int status = wsMsg.getStatus();
 
-					if (assetStatus == DBConstans.WsStatus.INJECT_SUCESS)
-						dbRepository.updateStatusByObjectId(wsMsg.getType(), wsMsg.getObjectId(),
-								wsMsg.getSubObjectId(), assetStatus);
-					cspResult = new CSPResult(ADIConstants.Result.Sucess, StringUtils.EMPTY);
+                    int assetStatus = DBConstans.AssetStatus.ADI_DEPLOYED;
+                    if (cmdResult == 0) {
+                        status = DBConstans.WsStatus.INJECT_SUCESS;
+                        assetStatus = DBConstans.AssetStatus.INJECTED;
+                    }
+                    else {
+                        status = DBConstans.WsStatus.INJECT_FAIL;
+                    }
 
-				}
-			else
-				cspResult = new CSPResult(ADIConstants.Result.FAIL,
-						String.format("correlateID[%s] not found.", correlateID));
-		} catch (final Exception e) {
+                    wsMsg.setStatus(status);
+                    wsMsg.setUpdateTime(DateTime.now().toDate());
+                    wsMsg.setResultFileUrl(resultFileURL);
 
-			CtmsSoapBindingImpl.LOG.error("Notify soap fail.", e);
+                    String path = FtpUtils.downloadFile(resultFileURL, outputDir);
 
-			cspResult = new CSPResult(ADIConstants.Result.FAIL, "Update stats fail.");
-		}
+                    LOG.info("Download Rsp file [{}],Store file path [{}]", resultFileURL, path);
+                    if (StringUtils.isNotBlank(path)) {
 
-		return cspResult;
-	}
+                        final RspADI rspADI = parseRsp(path);
+
+                        Pair<Integer, String> pair = readdRsp(rspADI);
+
+                        LOG.info("Readd  Rsp {}",
+                                ToStringBuilder.reflectionToString(pair, ToStringStyle.SHORT_PREFIX_STYLE));
+
+                        Integer left = pair.getLeft();
+                        if (left != null) {
+
+                            wsMsg.setNotifyRrrorDesc(pair.getRight());
+
+                            if (left.intValue() == 0) {
+                                status = DBConstans.WsStatus.INJECT_SUCESS;
+                                assetStatus = DBConstans.AssetStatus.INJECTED;
+                            }
+                            else {
+                                status = DBConstans.WsStatus.INJECT_FAIL;
+                            }
+                        }
+                    }
+
+                    dbRepository.updateWSMsgStatus(wsMsg);
+
+                    // TODO:更新注释状态
+                    dbRepository.updateStatusByObjectId(wsMsg.getType(), wsMsg.getObjectId(), wsMsg.getSubObjectId(),
+                            assetStatus);
+
+                    cspResult = new CSPResult(ADIConstants.Result.Sucess, StringUtils.EMPTY);
+
+                }
+            else
+                cspResult = new CSPResult(ADIConstants.Result.FAIL,
+                        String.format("correlateID[%s] not found.", correlateID));
+        }
+        catch (final Exception e) {
+
+            CtmsSoapBindingImpl.LOG.error("Notify soap fail.", e);
+
+            cspResult = new CSPResult(ADIConstants.Result.FAIL, "Update stats fail.");
+        }
+
+        return cspResult;
+    }
+
+    public RspADI parseRsp(String filePath) throws Exception {
+
+        if (jaxb == null) {
+            jaxb = JAXBContext.newInstance(RspADI.class);
+        }
+
+        Unmarshaller marshaller = jaxb.createUnmarshaller();
+
+        java.io.File file = new java.io.File(filePath);
+
+        RspADI rspADI = (RspADI) marshaller.unmarshal(file);
+
+        return rspADI;
+    }
+
+    public Pair<Integer, String> readdRsp(RspADI rspADI) throws Exception {
+
+        Pair<Integer, String> pair = new MutablePair<>();
+
+        Integer left = 0;
+
+        String right = "";
+
+        if (rspADI != null) {
+            final List<PropertyType> props = rspADI.getReply().getProperty();
+
+            for (PropertyType propertyType : props) {
+
+                String name = propertyType.getName();
+                String value = propertyType.getValue();
+                if (StringUtils.equals(name, ADIElementConstants.RESULT)) {
+                    left = Integer.valueOf(value);
+                }
+
+                if (StringUtils.equals(name, ADIElementConstants.DESC)) {
+                    right = value;
+                }
+            }
+
+            pair = pair.of(left, right);
+        }
+
+        return pair;
+    }
+
 }
