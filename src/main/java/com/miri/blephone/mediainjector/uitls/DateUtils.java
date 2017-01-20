@@ -1,9 +1,9 @@
 package com.miri.blephone.mediainjector.uitls;
 
-import org.joda.time.*;
-
 import java.text.*;
 import java.util.*;
+
+import org.joda.time.*;
 
 public class DateUtils {
 
@@ -35,7 +35,7 @@ public class DateUtils {
 
     public static String getReleaseDate(final Date date) {
 
-        final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+        final SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMdd");
 
         if (date != null) {
             return sdf.format(date);
