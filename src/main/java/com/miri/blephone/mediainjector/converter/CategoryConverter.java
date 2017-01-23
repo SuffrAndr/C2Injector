@@ -19,6 +19,10 @@ public class CategoryConverter extends AbstractConverter {
         name.setName(ADIElementConstants.NAME);
         name.setValue(clipname);
 
+        final PropertyType orderNumber = new PropertyType();
+        orderNumber.setName(ADIElementConstants.ORDERNUMBER);
+        orderNumber.setValue(StringUtils.EMPTY);
+
         final PropertyType sortName = new PropertyType();
         sortName.setName(ADIElementConstants.Series.SORT_NAME);
         sortName.setValue(clipname);
@@ -29,7 +33,7 @@ public class CategoryConverter extends AbstractConverter {
 
         final PropertyType orgAirDate = new PropertyType();
         orgAirDate.setName(ADIElementConstants.Series.ORG_AIR_DATE);
-        orgAirDate.setValue(DateUtils.getReleaseDate(a.getRelasetime()));
+        // orgAirDate.setValue(DateUtils.getReleaseDate(a.getRelasetime()));
 
         final PropertyType licensingWindowStart = new PropertyType();
         licensingWindowStart.setName(ADIElementConstants.LICENSING_WINDOW_START);
@@ -44,18 +48,17 @@ public class CategoryConverter extends AbstractConverter {
 
         // TODO:对于综艺，不设置总集数
         String serialCount = String.valueOf(a.getSerialcount());
-        String convertType = this.convertType(a.getFstname());
-        if (StringUtils.equalsIgnoreCase(convertType, "zy")) {
-            serialCount = StringUtils.EMPTY;
-        }
-
+        // String convertType = this.convertType(a.getFstname());
+        // if (StringUtils.equalsIgnoreCase(convertType, "zy")) {
+        // serialCount = StringUtils.EMPTY;
+        // }
         volumnCount.setValue(serialCount);
 
         final PropertyType status = new PropertyType();
         status.setName(ADIElementConstants.Series.STATUS);
         status.setValue(ADIElementConstants.Value.STATUS);
 
-        final List<PropertyType> propTypes = Lists.newArrayList(name, sortName, searchName, orgAirDate,
+        final List<PropertyType> propTypes = Lists.newArrayList(name, orderNumber, sortName, searchName, orgAirDate,
                 licensingWindowStart, licensingWindowEnd, volumnCount, status);
 
         final PropertyType desc = new PropertyType();
@@ -63,7 +66,7 @@ public class CategoryConverter extends AbstractConverter {
         desc.setValue(a.getStory());
         propTypes.add(desc);
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.TYPE, convertType));
+        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.TYPE, a.getFstname()));
 
         final PropertyType keywords = new PropertyType();
         keywords.setName(ADIElementConstants.KEYWORDS);
@@ -72,50 +75,65 @@ public class CategoryConverter extends AbstractConverter {
 
         final PropertyType tags = new PropertyType();
         tags.setName(ADIElementConstants.TAGS);
-        tags.setValue(this.convertTags(a.getTags()));
+        tags.setValue(this.convertTags(a.getKind()));
         propTypes.add(tags);
 
-        final PropertyType tag = new PropertyType();
-        tag.setName(ADIElementConstants.TAG);
-        tag.setValue(AbstractConverter.convertKind(a.getKind()));
-        propTypes.add(tag);
+        // final PropertyType tag = new PropertyType();
+        // tag.setName(ADIElementConstants.TAG);
+        // tag.setValue(AbstractConverter.convertKind(a.getKind()));
+        // propTypes.add(tag);
+
+        final PropertyType displayAsNew = new PropertyType();
+        displayAsNew.setName(ADIElementConstants.DISPLAYASNEW);
+        propTypes.add(displayAsNew);
+
+        final PropertyType displayAsLastChance = new PropertyType();
+        displayAsLastChance.setName(ADIElementConstants.DISPLAYASLASTCHANCE);
+        propTypes.add(displayAsLastChance);
 
         final PropertyType macrovision = new PropertyType();
         macrovision.setName(ADIElementConstants.MACROVISION);
-        macrovision.setValue(ADIElementConstants.Value.MACROVISION);
         propTypes.add(macrovision);
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.Program.SOURCETYPE,
-                ADIElementConstants.Value.SOURCETYPE));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.Program.SERIESFLAG,
-                ADIElementConstants.Value.SERIES_SERIESFLAG));
+        final PropertyType price = new PropertyType();
+        price.setName(ADIElementConstants.Price);
+        propTypes.add(price);
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.SCRIPTWRITER,
-                AbstractConverter.convertDirector(a.getAdaptor())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.COMPERE,
-                AbstractConverter.convertDirector(a.getAdaptor())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.KPEOPLE,
-                AbstractConverter.convertDirector(a.getLeader())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.Program.SOURCETYPE,
+        // ADIElementConstants.Value.SOURCETYPE));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.Program.SERIESFLAG,
+        // ADIElementConstants.Value.SERIES_SERIESFLAG));
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.WRITERDISPLAY,
-                AbstractConverter.convertDirector(a.getLeader())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ACTORDISPLAY,
-                AbstractConverter.convertDirector(a.getDirector())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.SCRIPTWRITER,
+        // AbstractConverter.convertDirector(a.getAdaptor())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.COMPERE,
+        // AbstractConverter.convertDirector(a.getAdaptor())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.KPEOPLE,
+        // AbstractConverter.convertDirector(a.getLeader())));
 
-        propTypes.add(PropsTypeUtils.buildOrderNumber());
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.WRITERDISPLAY,
+        // AbstractConverter.convertDirector(a.getLeader())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ACTORDISPLAY,
+        // AbstractConverter.convertDirector(a.getDirector())));
+
+        // propTypes.add(PropsTypeUtils.buildOrderNumber());
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ORIGINALNAME, clipname));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.LANGUAGE, a.getLanguage()));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.RELEASEYEAR, String.valueOf(a.getYear())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.LANGUAGE,
+        // a.getLanguage()));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.RELEASEYEAR,
+        // String.valueOf(a.getYear())));
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ORIGINALCOUNTRY,
-                AbstractConverter.convertArea(a.getArea())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ORIGINALCOUNTRY,
+        // AbstractConverter.convertArea(a.getArea())));
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASNEW, StringUtils.EMPTY));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASLASTCHANCE, StringUtils.EMPTY));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASNEW,
+        // StringUtils.EMPTY));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASLASTCHANCE,
+        // StringUtils.EMPTY));
 
-        propTypes.add(PropsTypeUtils.buildPriceProps());
-
-        propTypes.addAll(PropsTypeUtils.buildReserveProps());
+        // propTypes.add(PropsTypeUtils.buildPriceProps());
+        //
+        // propTypes.addAll(PropsTypeUtils.buildReserveProps());
 
         return propTypes;
     }

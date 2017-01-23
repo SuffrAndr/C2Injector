@@ -1,3 +1,5 @@
+import com.miri.blephone.mediainjector.uitls.*;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -5,11 +7,13 @@ public class FTP {
 
     public static void main(String[] args) {
 
-        String url = "ftp://ftper:ftper@183.235.11.104:2121/adi/resp_dc35107b6fdd4e5aa926211632bb6ff4_1467563494691.xml";
+        String url = "ftp://gdydott:mangguo123@183.235.21.141/asset/adi/2017/1/3/10/E1058313-regist.xml";
 
         String outputDir = "D:/2";
         try {
-            com.miri.blephone.mediainjector.uitls.FtpUtils.downloadFile(url, outputDir);
+            String s = FtpUtils.downloadFile(url, outputDir);
+
+            System.out.print(s);
         }
         catch (IOException | URISyntaxException e) {
             // TODO Auto-generated catch block

@@ -71,6 +71,7 @@
                                   <option value="4">4-ADI生成中</option>
                                   <option value="5">5-ADI已经部署(注入中)</option>                                 
                                   <option value="6">6-注入完成</option>
+									<option value="7">7-注入失败</option>
 								</select>	                          
 	                          </div>
 	                          <button type="reset" class="btn btn-default" id="crestBtn" name="crestBtn">重置</button>

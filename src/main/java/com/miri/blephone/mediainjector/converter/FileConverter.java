@@ -1,17 +1,13 @@
 package com.miri.blephone.mediainjector.converter;
 
-import java.util.List;
+import com.google.common.collect.*;
+import com.miri.blephone.mediainjector.config.*;
+import com.miri.blephone.mediainjector.db.domain.*;
+import com.miri.blephone.mediainjector.iptv.c2.adi.*;
+import com.miri.blephone.mediainjector.uitls.*;
+import org.springframework.stereotype.*;
 
-import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-import com.miri.blephone.mediainjector.config.ConfigConstants;
-import com.miri.blephone.mediainjector.config.GlobalConfig;
-import com.miri.blephone.mediainjector.db.domain.Clip;
-import com.miri.blephone.mediainjector.db.domain.File;
-import com.miri.blephone.mediainjector.iptv.c2.adi.ADIElementConstants;
-import com.miri.blephone.mediainjector.iptv.c2.adi.PropertyType;
-import com.miri.blephone.mediainjector.uitls.UrlUtils;
+import java.util.*;
 
 @Service
 public class FileConverter {
@@ -40,19 +36,15 @@ public class FileConverter {
         // TODO:设置为TS格式
         final PropertyType systemLayer = new PropertyType();
         systemLayer.setName(ADIElementConstants.Movie.SYSTEMLAYER);
-        systemLayer.setValue("1");
-
+        // systemLayer.setValue("1");
+        //
         // MGTV 都是H264，所以这里暂时直接硬编码
         // String videoformat = file.getVideoformat();
-        final PropertyType videoTypeProp = new PropertyType();
-        videoTypeProp.setName(ADIElementConstants.Movie.VIDEOTYPE);
-        videoTypeProp.setValue("1");
+        // final PropertyType videoTypeProp = new PropertyType();
+        // videoTypeProp.setName(ADIElementConstants.Movie.VIDEOTYPE);
+        // videoTypeProp.setValue("1");
 
-        return Lists.newArrayList(type, fileURL, systemLayer, videoTypeProp);
-    }
-
-    private static boolean isSpecial(int transferType) {
-        return transferType == ConfigConstants.Values.SPECIAL_TRANSFERTYPE;
+        return Lists.newArrayList(type, fileURL, systemLayer);
     }
 
     private int convertType(final int type) {
@@ -63,5 +55,9 @@ public class FileConverter {
         else {
             return 2;
         }
+    }
+
+    private static boolean isSpecial(int transferType) {
+        return transferType == ConfigConstants.Values.SPECIAL_TRANSFERTYPE;
     }
 }

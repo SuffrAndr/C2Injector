@@ -24,6 +24,10 @@ public class ClipConverter extends AbstractConverter {
         name.setName(ADIElementConstants.NAME);
         name.setValue(partname);
 
+        final PropertyType orderNumber = new PropertyType();
+        orderNumber.setName(ADIElementConstants.ORDERNUMBER);
+        orderNumber.setValue(StringUtils.EMPTY);
+
         final PropertyType sortName = new PropertyType();
         sortName.setName(ADIElementConstants.Series.SORT_NAME);
         sortName.setValue(partname);
@@ -44,7 +48,7 @@ public class ClipConverter extends AbstractConverter {
         licensingWindowEnd.setName(ADIElementConstants.LICENSING_WINDOW_END);
         licensingWindowEnd.setValue(DateUtils.getEndDateTime());
 
-        // TODO:修改为天机为剧集号
+        // TODO:修改为volumnCount为剧集号
         final PropertyType volumnCount = new PropertyType();
         volumnCount.setName(ADIElementConstants.Series.VOLUMN_COUNT);
         volumnCount.setValue(String.valueOf(clip.getSerialno()));
@@ -53,7 +57,7 @@ public class ClipConverter extends AbstractConverter {
         status.setName(ADIElementConstants.Series.STATUS);
         status.setValue(ADIElementConstants.Value.STATUS);
 
-        final List<PropertyType> propTypes = Lists.newArrayList(name, sortName, searchName, orgAirDate,
+        final List<PropertyType> propTypes = Lists.newArrayList(name, orderNumber, sortName, searchName, orgAirDate,
                 licensingWindowStart, licensingWindowEnd, volumnCount, status);
 
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.ORIGINALNAME, partname));
@@ -69,13 +73,8 @@ public class ClipConverter extends AbstractConverter {
 
         final PropertyType tags = new PropertyType();
         tags.setName(ADIElementConstants.TAGS);
-        tags.setValue(this.convertTags(category.getTags()));
+        tags.setValue(this.convertTags(category.getKind()));
         propTypes.add(tags);
-
-        final PropertyType tag = new PropertyType();
-        tag.setName(ADIElementConstants.TAG);
-        tag.setValue(AbstractConverter.convertKind(category.getKind()));
-        propTypes.add(tag);
 
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASNEW, StringUtils.EMPTY));
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DISPLAYASLASTCHANCE, StringUtils.EMPTY));
@@ -89,15 +88,14 @@ public class ClipConverter extends AbstractConverter {
 
         final PropertyType macrovision = new PropertyType();
         macrovision.setName(ADIElementConstants.MACROVISION);
-        macrovision.setValue(ADIElementConstants.Value.MACROVISION);
         propTypes.add(macrovision);
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.SCRIPTWRITER,
-                AbstractConverter.convertDirector(category.getAdaptor())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.COMPERE,
-                AbstractConverter.convertDirector(category.getAdaptor())));
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.KPEOPLE,
-                AbstractConverter.convertDirector(category.getLeader())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.SCRIPTWRITER,
+        // AbstractConverter.convertDirector(category.getAdaptor())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.COMPERE,
+        // AbstractConverter.convertDirector(category.getAdaptor())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.KPEOPLE,
+        // AbstractConverter.convertDirector(category.getLeader())));
 
         propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.WRITERDISPLAY,
                 AbstractConverter.convertDirector(category.getLeader())));
@@ -124,11 +122,11 @@ public class ClipConverter extends AbstractConverter {
         definitionFlag.setValue(String.valueOf(convertDefinition(definition)));
         propTypes.add(definitionFlag);
 
-        propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DURATION,
-                AbstractConverter.convertDuration(clip.getDuration())));
+        // propTypes.add(PropsTypeUtils.buildPropertyType(ADIElementConstants.DURATION,
+        // AbstractConverter.convertDuration(clip.getDuration())));
 
-        propTypes.add(PropsTypeUtils.buildPriceProps());
-        propTypes.addAll(PropsTypeUtils.buildReserveProps());
+        // propTypes.add(PropsTypeUtils.buildPriceProps());
+        // propTypes.addAll(PropsTypeUtils.buildReserveProps());
 
         return propTypes;
     }

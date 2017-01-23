@@ -101,6 +101,7 @@
                                   <option value="4">4-ADI生成中</option>
                                   <option value="5">5-ADI已经部署(注入中)</option>
                                   <option value="6">6-注入完成</option>
+ 								  <option value="7">7-注入失败</option>
 								</select>	                          
 	                          </div>
                               <div class="form-group input-group-sm">
