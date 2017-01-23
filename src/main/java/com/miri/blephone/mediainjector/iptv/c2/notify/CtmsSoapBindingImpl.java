@@ -5,18 +5,6 @@
 
 package com.miri.blephone.mediainjector.iptv.c2.notify;
 
-import java.rmi.*;
-import java.util.*;
-
-import javax.xml.bind.*;
-
-import org.apache.commons.collections.*;
-import org.apache.commons.lang.*;
-import org.apache.commons.lang.builder.*;
-import org.apache.commons.lang3.tuple.*;
-import org.joda.time.*;
-import org.slf4j.*;
-
 import com.miri.blephone.mediainjector.config.*;
 import com.miri.blephone.mediainjector.db.*;
 import com.miri.blephone.mediainjector.db.dao.*;
@@ -24,6 +12,16 @@ import com.miri.blephone.mediainjector.db.domain.*;
 import com.miri.blephone.mediainjector.iptv.c2.adi.*;
 import com.miri.blephone.mediainjector.iptv.c2.adi.rsp.*;
 import com.miri.blephone.mediainjector.uitls.*;
+import org.apache.commons.collections.*;
+import org.apache.commons.lang.*;
+import org.apache.commons.lang.builder.*;
+import org.apache.commons.lang3.tuple.*;
+import org.joda.time.*;
+import org.slf4j.*;
+
+import javax.xml.bind.*;
+import java.rmi.*;
+import java.util.*;
 
 public class CtmsSoapBindingImpl implements CSPResponse {
 
@@ -97,6 +95,7 @@ public class CtmsSoapBindingImpl implements CSPResponse {
                             }
                             else {
                                 status = DBConstans.WsStatus.INJECT_FAIL;
+	                            assetStatus = DBConstans.AssetStatus.INJECTED_FAIL;
                             }
                         }
                     }

@@ -1,14 +1,13 @@
 package com.miri.blephone.mediainjector.converter;
 
-import java.util.*;
-
-import org.apache.commons.lang.*;
-import org.springframework.stereotype.*;
-
 import com.google.common.collect.*;
 import com.miri.blephone.mediainjector.db.domain.*;
 import com.miri.blephone.mediainjector.iptv.c2.adi.*;
 import com.miri.blephone.mediainjector.uitls.*;
+import org.apache.commons.lang.*;
+import org.springframework.stereotype.*;
+
+import java.util.*;
 
 @Component
 public class CategoryConverter extends AbstractConverter {
@@ -80,11 +79,6 @@ public class CategoryConverter extends AbstractConverter {
         tag.setName(ADIElementConstants.TAG);
         tag.setValue(AbstractConverter.convertKind(a.getKind()));
         propTypes.add(tag);
-
-	    final PropertyType produceDate = new PropertyType();
-	    produceDate.setName(ADIElementConstants.PRODUCEDATE);
-	    produceDate.setValue(DateUtils.getDate(a.getRelasetime()));
-	    propTypes.add(produceDate);
 
         final PropertyType macrovision = new PropertyType();
         macrovision.setName(ADIElementConstants.MACROVISION);
