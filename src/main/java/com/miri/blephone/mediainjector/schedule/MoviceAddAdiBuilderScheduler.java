@@ -79,7 +79,7 @@ public class MoviceAddAdiBuilderScheduler extends BuilderScheduler implements In
                     final Objects objects = objectFactory.createADIObjects();
 
                     final String id = IdUtils.buildId(this.idBuilder.getCpCode(), this.idBuilder.getVersionCode(),
-                            this.idBuilder.getObjTypeMovice(), category.getObjectId());
+                            this.idBuilder.getObjTypeMovice(), clip.getObjectId());
 
                     final Object pObj = objectFactory.createADIObjectsObject();
 
@@ -99,7 +99,7 @@ public class MoviceAddAdiBuilderScheduler extends BuilderScheduler implements In
                     final Mappings mappings = objectFactory.createADIMappings();
 
                     final String mId = IdUtils.buildId(this.idBuilder.getCpCode(), this.idBuilder.getVersionCode(),
-                            this.idBuilder.getObjTypeSeries(), category.getObjectId());
+                            this.idBuilder.getObjTypeSeries(), file.getObjectId());
 
                     final Object mObj = objectFactory.createADIObjectsObject();
 
@@ -135,7 +135,7 @@ public class MoviceAddAdiBuilderScheduler extends BuilderScheduler implements In
 
                     final WsMsg wsMsg = new WsMsg();
                     wsMsg.setCorrelateId(id);
-                    wsMsg.setObjectId(category.getObjectId());
+                    wsMsg.setObjectId(clip.getObjectId());
                     wsMsg.setType(ObjectId.ObjectType.PROGRAM);
                     wsMsg.setOpType(DBConstans.WsOpType.REGIST);
                     wsMsg.setStorePath(storePath);

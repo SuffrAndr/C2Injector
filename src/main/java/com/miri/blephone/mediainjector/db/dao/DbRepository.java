@@ -536,7 +536,7 @@ public class DbRepository {
                 final Category category = this.categoryMapper.queryByOriginalId(clip.getOriassetid());
 
                 if (category.getStatus() == DBConstans.AssetStatus.ADI_DEPLOYED) {
-                    this.categoryMapper.updateStatusByObjectId(objectId, status);
+                    this.categoryMapper.updateStatusByObjectId(category.getObjectId(), status);
                 }
 
                 this.clipMapper.updateStatusByObjectId(objectId, status);
