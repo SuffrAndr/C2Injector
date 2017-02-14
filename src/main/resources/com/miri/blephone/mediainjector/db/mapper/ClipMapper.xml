@@ -99,6 +99,7 @@
             AND    A.ORIASSETID = C.ORIGINALID
             AND    B.ORIASSETID = C.ORIGINALID
             AND    C.STATUS = #{categoryStatus}
+            AND    C.SERIALCOUNT > 1
             ORDER BY A.ORIASSETID, A.ORIPARTID
             LIMIT  10
         ]]>        

@@ -97,7 +97,7 @@
      </select>
      
      <select id="querySeriesByStatus" resultType="Category">
-        SELECT * FROM T_CATEGORY WHERE STATUS = #{status} LIMIT 10
+        SELECT * FROM T_CATEGORY WHERE STATUS = #{status} AND SERIALCOUNT &gt; 1 LIMIT 10
      </select>
      
      <select id="queryByOriginalId" resultType="Category">
