@@ -42,7 +42,7 @@ public class CtmsSoapBindingImpl implements CSPResponse {
     public CSPResult resultNotify(final String CSPID, final String LSPID, final String correlateID, final int cmdResult,
             final String resultFileURL) throws RemoteException {
 
-        CtmsSoapBindingImpl.LOG.info("correlateID [{}] {}", correlateID, cmdResult);
+        CtmsSoapBindingImpl.LOG.info("correlateID {},{}, {}", correlateID, cmdResult, resultFileURL);
 
         CSPResult cspResult = null;
         try {
