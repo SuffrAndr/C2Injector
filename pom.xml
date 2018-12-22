@@ -10,7 +10,7 @@
 		<jdk.version>1.8</jdk.version>
 		<junit.version>4.12</junit.version>
 
-		<commons.fileupload.version>1.3.1</commons.fileupload.version>
+		<commons.fileupload.version>1.3.2</commons.fileupload.version>
 		<commons.net.version>3.4</commons.net.version>
 		<commons.beanutils.version>1.9.2</commons.beanutils.version>
 		<commons.code.version>1.6</commons.code.version>
